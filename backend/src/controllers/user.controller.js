@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import {
-    createUserSchema,
-    updateSchema,
+  createUserSchema,
+  updateUserSchema,
 } from "../validations/user.validation.js";
 export const getUsers = async (req, res) => {
   try {
@@ -53,7 +53,7 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const parsedData = updateSchema.safeParse(req.body);
+  const parsedData = updateUserSchema.safeParse(req.body);
   if (!parsedData.success) {
     return res.status(400).json({
       message: parsedData.error.issues[0].message,

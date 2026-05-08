@@ -5,7 +5,6 @@ import { loginSchema } from "../../validations/auth.validation.js";
 // export const register = async (req, res) => {};
 export const login = async (req, res) => {
   const parsedData = loginSchema.safeParse(req.body);
-
   if (!parsedData.success) {
     return res.status(400).json({
       message: parsedData.error.issues[0].message,
@@ -13,10 +12,11 @@ export const login = async (req, res) => {
   }
   try {
     const { email, password } = parsedData.data;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
     if (!user) return res.status(400).json({ msg: "Invalid Email" });
 
     const isMatch = await user.comparePassword(password);
+    console.log(isMatch);
     if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
     const token = generateToken(user._id);
     res.cookie("token", token, {
@@ -37,7 +37,9 @@ export const logout = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user).select("-password");
+    const user = req.user;
+    // const user = await User.findById(req.user).select("-password");
+    console.log(user);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });

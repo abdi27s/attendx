@@ -5,12 +5,11 @@ const userSchema = mongoose.Schema(
   {
     fullname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     cardno: { type: Number, required: true, unique: true },
-    role: {
-      type: String,
-      enum: ["admin", "user"],
-      default: "user",
+    isAdmin: {
+      type: Boolean,
+      default: false,
       required: true,
     },
     designation: {
@@ -26,6 +25,14 @@ const userSchema = mongoose.Schema(
       ],
       required: true,
     },
+    workdays: [
+      {
+        day: { type: String, required: true },
+        startTime: { type: String, required: true },
+        endTime: { type: String, required: true },
+      },
+    ],
+    active: { type: Boolean, required: true, default: true },
   },
   { timestamps: true },
 );
@@ -36,6 +43,7 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.comparePassword = async function (password) {
+  console.log(password, this.password);
   return await bcrypt.compare(password, this.password);
 };
 
