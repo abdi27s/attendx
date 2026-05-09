@@ -1,10 +1,3 @@
-logdate;
-userid;
-remarks;
-leavetype;
-remarks;
-datapostedby;
-
 import mongoose from "mongoose";
 
 const attendanceRemarksSchema = mongoose.Schema(

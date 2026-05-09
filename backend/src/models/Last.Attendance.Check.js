@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 
-const lastAttendanceCheckSchema = mongoose.Schema(
-  { ipaddress: { type: String, required: true } },
+const lastAttendanceCheckSchema = new mongoose.Schema(
+  {
+    ipaddress: { type: String, required: true, unique: true },
+
+    lastSyncedAt: {
+      type: Date,
+      default: new Date(0),
+    },
+  },
   { timestamps: true },
 );
 

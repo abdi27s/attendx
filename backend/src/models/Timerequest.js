@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const timeRequestSchema = mongoose.Schema(
   {
-    userId: { type: Number, required: true },
-    cardNo: { type: Number, required: true },
-    date: { type: Date, required: true },
+    userId: { type: Number, required: true, index: true },
+    cardNo: { type: Number, required: true, index: true },
+    date: { type: String, required: true },
     time: {
       type: String,
       required: true,
