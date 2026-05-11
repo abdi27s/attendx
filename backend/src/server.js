@@ -27,7 +27,7 @@ app.use("/api/attendance", protect, adminOnly, attendance);
 app.use("/api/lastSync", protect, lastSync);
 
 connectDB();
-connectDevice();
+// connectDevice();
 app.listen(port, () => {
   console.log(`server started on ${port}`);
 });
