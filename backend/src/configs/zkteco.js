@@ -11,21 +11,13 @@ async function connectDevice() {
 
   try {
     await zk.createSocket();
-
     const logs = await zk.getAttendances();
-
     console.log("Total logs:", logs.data.length);
-
-    // get last sync
     const lastCheck = await LastAttendanceCheck.findOne({ ipaddress: ip });
-
     const lastSyncTime = lastCheck?.lastSyncedAt || new Date(0);
-
-    // filter only new logs
     const newLogs = logs.data.filter((r) => {
       return new Date(r.recordTime) > lastSyncTime;
     });
-
     console.log("New logs:", newLogs.length);
 
     if (newLogs.length > 0) {
@@ -50,7 +42,6 @@ async function connectDevice() {
                 biometric_device_id: 1,
               },
             },
-
             upsert: true,
           },
         };
@@ -76,7 +67,7 @@ async function connectDevice() {
     await zk.disconnect();
     console.log("Disconnected ✔");
   } catch (err) {
-    console.error("FULL ERROR:", err);
+    console.error("ERROR:", err);
   }
 }
 

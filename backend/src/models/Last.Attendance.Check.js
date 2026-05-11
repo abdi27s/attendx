@@ -1,16 +1,13 @@
 import mongoose from "mongoose";
 
-const lastAttendanceCheckSchema = new mongoose.Schema(
-  {
-    ipaddress: { type: String, required: true, unique: true },
+const lastAttendanceCheckSchema = new mongoose.Schema({
+  ipaddress: { type: String, required: true, unique: true },
 
-    lastSyncedAt: {
-      type: Date,
-      default: new Date(0),
-    },
+  lastSyncedAt: {
+    type: Date,
+    default: new Date(0),
   },
-  { timestamps: true },
-);
+});
 
 const LastAttendanceCheck = mongoose.model(
   "LastAttendanceCheck",
