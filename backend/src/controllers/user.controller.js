@@ -86,7 +86,7 @@ export const updateUser = async (req, res) => {
     }
 
     const user = await User.findByIdAndUpdate(req.params.id, updateData, {
-      new: true, // modern mongoose replacement for returnDocument: "after"
+      returnDocument: "after",
     });
 
     if (!user) {
