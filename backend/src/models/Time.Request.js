@@ -4,11 +4,9 @@ const timeRequestSchema = mongoose.Schema(
   {
     userId: { type: Number, required: true, index: true },
     cardNo: { type: Number, required: true, index: true },
-    date: { type: String, required: true },
-    time: {
-      type: String,
+    timestamp: {
+      type: Date,
       required: true,
-      match: /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
     },
     reason: { type: String, required: true },
     requestedBy: { type: String, required: true },

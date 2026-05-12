@@ -1,6 +1,40 @@
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
+const workdaySchema = new mongoose.Schema(
+  {
+    day: {
+      type: String,
+      required: true,
+      enum: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+    },
+
+    // stored as minutes for safe comparison (09:00 = 540)
+    startMinutes: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1440,
+    },
+
+    endMinutes: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1440,
+    },
+  },
+  { _id: false },
+);
+
 const userSchema = mongoose.Schema(
   {
     fullname: { type: String, required: true },
@@ -25,13 +59,7 @@ const userSchema = mongoose.Schema(
       ],
       required: true,
     },
-    workdays: [
-      {
-        day: { type: String, required: true },
-        startTime: { type: String, required: true },
-        endTime: { type: String, required: true },
-      },
-    ],
+    workdays: [workdaySchema],
     active: { type: Boolean, required: true, default: true },
   },
   { timestamps: true },
@@ -43,7 +71,6 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.comparePassword = async function (password) {
-  console.log(password, this.password);
   return await bcrypt.compare(password, this.password);
 };
 

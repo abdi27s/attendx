@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { timeToMinutes } from "../utils/DateTime.js";
 
-// enums
+/* ---------------- ENUMS ---------------- */
+
 const dayEnum = z.enum([
   "Sunday",
   "Monday",
@@ -21,22 +23,27 @@ const designationEnum = z.enum([
   "cleaner",
 ]);
 
-// HH:mm 24-hour format
+/* ---------------- TIME VALIDATION ---------------- */
+
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
-// workday schema
+/* ---------------- WORKDAY SCHEMA ---------------- */
+
 const workdaySchema = z
   .object({
     day: dayEnum,
-    startTime: z.string().regex(timeRegex, "Invalid time format (HH:mm)"),
-    endTime: z.string().regex(timeRegex, "Invalid time format (HH:mm)"),
+
+    startTime: z.string().regex(timeRegex, "startTime must be in HH:mm format"),
+
+    endTime: z.string().regex(timeRegex, "endTime must be in HH:mm format"),
   })
-  .refine((d) => d.endTime > d.startTime, {
+  .refine((d) => timeToMinutes(d.endTime) > timeToMinutes(d.startTime), {
     message: "endTime must be after startTime",
     path: ["endTime"],
   });
 
-// create schema
+/* ---------------- CREATE USER ---------------- */
+
 export const createUserSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
 
@@ -44,28 +51,22 @@ export const createUserSchema = z.object({
 
   password: z.string().min(8, "Password must be at least 8 characters"),
 
-  cardno: z
-    .number()
-    .int("Card number must be integer")
-    .positive("Card number must be greater than 0"),
+  cardno: z.number().int().positive(),
 
   isAdmin: z.boolean().default(false),
 
-  designation: designationEnum.optional(),
+  designation: designationEnum,
 
   workdays: z
     .array(workdaySchema)
     .min(1, "At least one workday is required")
-    .refine(
-      (arr) => {
-        const days = arr.map((d) => d.day);
-        return new Set(days).size === days.length;
-      },
-      { message: "Duplicate workdays are not allowed" },
-    ),
+    .refine((arr) => new Set(arr.map((d) => d.day)).size === arr.length, {
+      message: "Duplicate workdays are not allowed",
+    }),
 
   active: z.boolean().default(true),
 });
 
-// update schema (all optional)
+/* ---------------- UPDATE USER ---------------- */
+
 export const updateUserSchema = createUserSchema.partial();

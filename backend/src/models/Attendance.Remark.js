@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
-const attendanceRemarksSchema = mongoose.Schema(
+const attendanceRemarkSchema = mongoose.Schema(
   {
     userId: { type: Number, required: true },
     cardNo: { type: Number, required: true },
-    date: { type: Date, required: true },
+    date: {
+      type: Date,
+      required: true,
+    },
     leaveType: {
       type: String,
       enum: [
@@ -22,9 +25,12 @@ const attendanceRemarksSchema = mongoose.Schema(
   },
   { timestamps: true },
 );
-const AttendanceRemarks = mongoose.model(
-  "AttendanceRemarks",
-  attendanceRemarksSchema,
+
+attendanceRemarkSchema.index({ cardNo: 1, date: 1 }, { unique: true });
+
+const AttendanceRemark = mongoose.model(
+  "AttendanceRemark",
+  attendanceRemarkSchema,
 );
 
-export default AttendanceRemarks;
+export default AttendanceRemark;

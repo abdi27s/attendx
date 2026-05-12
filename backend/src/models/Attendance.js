@@ -7,31 +7,19 @@ const attendanceSchema = new mongoose.Schema({
     index: true,
   },
 
-  // raw device timestamp (source of truth)
-  deviceTimestamp: {
+  logTimestamp: {
     type: Date,
     required: true,
     index: true,
   },
 
-  logDate: {
-    type: String,
-    required: true,
-  },
-
-  logTime: {
-    type: String,
-    required: true,
-    match: /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-  },
-
-  machineSerial: String,
+  machineSerial: { type: String },
   ipaddress: { type: String, required: true },
   biometric_device_id: { type: Number, required: true },
 });
 
 // prevent duplicates
-attendanceSchema.index({ cardno: 1, deviceTimestamp: 1 }, { unique: true });
+attendanceSchema.index({ cardno: 1, logTimestamp: 1 }, { unique: true });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);
 

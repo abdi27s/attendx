@@ -1,7 +1,6 @@
 import ZKLib from "node-zklib";
-
 import Attendance from "../models/Attendance.js";
-import LastAttendanceCheck from "../models/Last.Attendance.Check.js";
+import LastSync from "../models/Last.Sync.js";
 
 async function connectDevice() {
   const ip = process.env.DEVICE_IP;
@@ -13,7 +12,7 @@ async function connectDevice() {
     await zk.createSocket();
     const logs = await zk.getAttendances();
     console.log("Total logs:", logs.data.length);
-    const lastCheck = await LastAttendanceCheck.findOne({ ipaddress: ip });
+    const lastCheck = await LastSync.findOne({ ipaddress: ip });
     const lastSyncTime = lastCheck?.lastSyncedAt || new Date(0);
     const newLogs = logs.data.filter((r) => {
       return new Date(r.recordTime) > lastSyncTime;
@@ -28,16 +27,14 @@ async function connectDevice() {
           updateOne: {
             filter: {
               cardno: Number(record.deviceUserId),
-              deviceTimestamp: date,
+              logTimestamp: date,
             },
 
             update: {
               $setOnInsert: {
                 cardno: Number(record.deviceUserId),
-                deviceTimestamp: date,
-                logDate: date.toISOString().split("T")[0],
-                logTime: date.toTimeString().split(" ")[0],
-                machineSerial: "ZKTeco",
+                logTimestamp: date,
+                machineSerial: "",
                 ipaddress: record.ip,
                 biometric_device_id: 1,
               },
@@ -55,17 +52,17 @@ async function connectDevice() {
         return t > max ? t : max;
       }, lastSyncTime);
 
-      await LastAttendanceCheck.findOneAndUpdate(
+      await LastSync.findOneAndUpdate(
         { ipaddress: ip },
         { $set: { lastSyncedAt: latestTime } },
         { upsert: true },
       );
 
-      console.log("Attendance synced ✔");
+      console.log("Attendance synced");
     }
 
     await zk.disconnect();
-    console.log("Disconnected ✔");
+    console.log("Disconnected");
   } catch (err) {
     console.error("ERROR:", err);
   }
