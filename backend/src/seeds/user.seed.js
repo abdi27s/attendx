@@ -24,7 +24,5 @@ export const seedUsers = async () => {
     });
 
     console.log("Admin user seeded");
-  } else {
-    console.log("Users already exist, skipping seed");
   }
 };

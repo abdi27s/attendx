@@ -1,9 +1,4 @@
-// datetimeUtils.js
-
-/**
- * Convert "HH:mm" → total minutes
- * Example: "09:30" → 570
- */
+//Convert "HH:mm" → total minutes
 export const timeToMinutes = (time) => {
   if (!time || typeof time !== "string") return 0;
 
@@ -12,10 +7,7 @@ export const timeToMinutes = (time) => {
   return hours * 60 + minutes;
 };
 
-/**
- * Convert minutes → "HH:mm"
- * Example: 570 → "09:30"
- */
+//Convert total minutes → "HH:mm"
 export const minutesToTime = (minutes) => {
   if (typeof minutes !== "number") return "00:00";
 

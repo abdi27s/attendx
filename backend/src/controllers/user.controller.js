@@ -39,7 +39,7 @@ export const createUser = async (req, res) => {
       });
     }
 
-    // 🔥 normalize workdays (HH:mm → minutes)
+    // normalize workdays (HH:mm → minutes)
     const normalizedWorkdays = normalizeWorkdays(workdays);
 
     const user = await User.create({
@@ -80,7 +80,7 @@ export const updateUser = async (req, res) => {
   try {
     const updateData = { ...parsedData.data };
 
-    // 🔥 convert workdays ONLY if provided
+    // convert workdays ONLY if provided
     if (updateData.workdays) {
       updateData.workdays = normalizeWorkdays(updateData.workdays);
     }

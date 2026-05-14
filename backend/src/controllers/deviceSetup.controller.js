@@ -1,4 +1,8 @@
 import DeviceSetup from "../models/Device.Setup.js";
+import {
+  createDeviceSchema,
+  updateDeviceSchema,
+} from "../validations/deviceSetup.validation.js";
 export const getDeviceDetails = async (req, res) => {
   try {
     const deviceDetail = await DeviceSetup.find();
@@ -10,8 +14,20 @@ export const getDeviceDetails = async (req, res) => {
 };
 
 export const createDevice = async (req, res) => {
+  const parsedData = createDeviceSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    return res.status(400).json({
+      message: parsedData.error.issues[0].message,
+    });
+  }
   try {
-    const device = await DeviceSetup.create(req.body);
+    const { ipaddress } = parsedData.data;
+    const existingDevice = await DeviceSetup.findOne({ ipaddress });
+    console.log(existingDevice);
+    if (existingDevice) {
+      return res.status(409).json({ message: "Device already exists" });
+    }
+    const device = await DeviceSetup.create(parsedData.data);
     return res.status(201).json(device);
   } catch (error) {
     console.error("Error in createDevice", error);
@@ -20,10 +36,16 @@ export const createDevice = async (req, res) => {
 };
 
 export const updateDevice = async (req, res) => {
+  const parsedData = updateDeviceSchema.safeParse(req.body);
+  if (!parsedData.success) {
+    return res.status(400).json({
+      message: parsedData.error.issues[0].message,
+    });
+  }
   try {
     const device = await DeviceSetup.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      parsedData.data,
       {
         returnDocument: "after",
       },
