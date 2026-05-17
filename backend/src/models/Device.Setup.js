@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const deviceSetupSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
+    location: { type: String, required: true },
     ipaddress: { type: String, required: true, unique: true },
     deviceType: { type: String, required: true },
     devicePort: { type: Number, required: true },

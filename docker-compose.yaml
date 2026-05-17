@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7.0.34
+    container_name: mongo7
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - D:\docker\mongo7:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+
+  backend:
+    build: ./backend
+    container_name: attendx-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://admin:secret@mongo:27017/attendx?authSource=admin
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: attendx-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

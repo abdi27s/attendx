@@ -49,3 +49,11 @@ export const dateToNepalMinutes = (date = new Date()) => {
 
   return nepalTime.getHours() * 60 + nepalTime.getMinutes();
 };
+
+export const formatDateField = (field, format) => ({
+  $dateToString: {
+    format,
+    date: { $toDate: `$${field}` },
+    timezone: process.env.TIMEZONE || "+05:45",
+  },
+});

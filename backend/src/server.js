@@ -7,10 +7,11 @@ import { adminOnly } from "./middlewares/adminOnly.js";
 import { protect } from "./middlewares/auth.js";
 import attendance from "./routes/attendance.route.js";
 import attendanceRemark from "./routes/attendanceRemark.route.js";
-import dashboard from "./routes/attendanceTable.route.js";
 import authRouter from "./routes/auth/auth.route.js";
+import dashboard from "./routes/dashboard/attendanceTable.route.js";
 import deviceSetup from "./routes/deviceSetup.route.js";
 import lastSync from "./routes/lastSync.route.js";
+import timeRequest from "./routes/timeRequest.route.js";
 import userRouter from "./routes/user.route.js";
 import { seedUsers } from "./seeds/user.seed.js";
 
@@ -46,6 +47,7 @@ app.use("/api/device", protect, adminOnly, deviceSetup);
 app.use("/api/attendance", protect, adminOnly, attendance);
 app.use("/api/last-sync", protect, lastSync);
 app.use("/api/attendance-remarks", protect, attendanceRemark);
+app.use("/api/time-request", protect, timeRequest);
 app.use("/api/dashboard", protect, dashboard);
 
 startServer();

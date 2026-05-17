@@ -1,5 +1,5 @@
 import express from "express";
-import { getAttendanceTable } from "../controllers/dashboard/attendanceTable.controller.js";
+import { getAttendanceTable } from "../../controllers/dashboard/attendanceTable.controller.js";
 
 const router = express.Router();
 

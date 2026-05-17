@@ -13,12 +13,12 @@ export const getAttendanceRemarks = async (req, res) => {
 };
 
 export const createAttendanceRemark = async (req, res) => {
-  const { cardno, date } = req.body;
-  const existingData = await AttendanceRemark.findOne({ cardno, date });
+  const { cardNo, date } = req.body;
+  const existingData = await AttendanceRemark.findOne({ cardNo, date });
   if (existingData)
     return res.status(409).json({ msg: "Data already exists." });
   try {
-    const attendanceRemark = await AttendanceRemarks.create(req.body);
+    const attendanceRemark = await AttendanceRemark.create(req.body);
     return res.status(201).json(attendanceRemark);
   } catch (error) {
     console.error("Error in createAttendanceRemark", error);

@@ -2,6 +2,7 @@ import z from "zod";
 
 export const createDeviceSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  location: z.string().min(1, "Location is required"),
   ipaddress: z.string().ipv4("IP Address is required"),
   deviceType: z.string().min(1, "Device Type is required"),
   devicePort: z.number().min(4, "Device Port is required"),
