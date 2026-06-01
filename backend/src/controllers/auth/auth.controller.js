@@ -13,11 +13,13 @@ export const login = async (req, res) => {
   try {
     const { email, password } = parsedData.data;
     const user = await User.findOne({ email }).select("+password");
-    if (!user) return res.status(400).json({ msg: "Invalid Email" });
+    if (!user)
+      return res.status(400).json({ msg: "Invalid Email or Password" });
 
     const isMatch = await user.comparePassword(password);
     console.log(isMatch);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid password" });
+    if (!isMatch)
+      return res.status(400).json({ msg: "Invalid Email or Password" });
     const token = generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
